@@ -1,0 +1,133 @@
+# x-airflow-common: &airflow-common
+#   build:
+#     context: .
+#     dockerfile: airflow/Dockerfile
+#   pull_policy: never
+#   environment:
+#     AIRFLOW__CORE__EXECUTOR: LocalExecutor
+#     AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+#     AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+#     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
+#     AIRFLOW__WEBSERVER__EXPOSE_CONFIG: "true"
+#     PYTHONPATH: /opt/airflow
+#     UID: "${AIRFLOW_UID}"
+#   volumes:
+#     - ./airflow/dags:/opt/airflow/dags
+#     # - ./airflow/tasks:/opt/airflow/tasks
+#     - ./scripts:/opt/airflow/scripts
+#     - ./data:/opt/airflow/data
+#     - airflow_logs:/opt/airflow/logs
+#   depends_on:
+#     - postgres
+
+
+services:
+
+  # airflow services
+  # ---
+  # postgres:
+  #   image: postgres:15
+  #   container_name: museekar-airflow-postgres
+  #   restart: unless-stopped
+  #   environment:
+  #     POSTGRES_USER: airflow
+  #     POSTGRES_PASSWORD: airflow
+  #     POSTGRES_DB: airflow
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U airflow"]
+  #     interval: 5s
+  #     retries: 5
+  #
+  # airflow-init:
+  #   <<: *airflow-common
+  #   container_name: museekar-airflow-init
+  #   restart: "no"
+  #   entrypoint: /bin/bash
+  #   command:
+  #     - -c
+  #     - |
+  #       set -e
+  #       airflow db migrate
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #
+  # airflow-webserver:
+  #   <<: *airflow-common
+  #   container_name: museekar-airflow-webserver
+  #   restart: unless-stopped
+  #   networks:
+  #     - caddy
+  #     - default
+  #   command: api-server
+  #   depends_on:
+  #     caddy:
+  #       condition: service_started
+  #     airflow-init:
+  #       condition: service_completed_successfully
+  #
+  # airflow-scheduler:
+  #   <<: *airflow-common
+  #   container_name: museekar-airflow-scheduler
+  #   restart: unless-stopped
+  #   command: scheduler
+  #   depends_on:
+  #     airflow-init:
+  #       condition: service_completed_successfully
+
+  # network proxy
+  # ---
+  caddy:
+    image: caddy:latest
+    container_name: museekar-caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      # - "127.0.0.1:8080:8080"
+    networks:
+      - caddy
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_config:/config
+      - caddy_data:/data
+
+  # api backend
+  # ---
+  fastapi:
+    image: museekar-fastapi
+    build:
+      context: backend
+      dockerfile: ../backend/Dockerfile # relative to context
+    pull_policy: never
+    container_name: museekar-fastapi
+    environment:
+      PYTHONPATH: /src
+    env_file:
+      - path: ./.env
+        required: true
+    command: uv run uvicorn backend.main:app --host 0.0.0.0 --port 3000
+    # command: 
+    networks:
+      - caddy
+    volumes:
+      - ./data:/src/data
+      - ./backend:/src/backend
+      - ./src/model/demandPrediction:/src/model
+      # - ./data/NYC_Taxi_Zones.json:/backend/data/NYC_Taxi_Zones.json
+      # - ./data/cameras_data.json:/backend/data/NYC_Traffic_Cameras.json
+    depends_on:
+      caddy:
+        condition: service_started
+
+networks:
+  caddy:
+  default:
+volumes:
+  caddy_data:
+  caddy_config:
+  # postgres_data:
+  # airflow_logs:
+

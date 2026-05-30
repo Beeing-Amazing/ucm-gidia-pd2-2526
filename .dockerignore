@@ -1,0 +1,15 @@
+# venv
+.venv/
+
+# data
+data/
+*.parquet
+
+# cache
+__pycache__/
+
+# other
+app/
+logs/
+src/
+*.md
