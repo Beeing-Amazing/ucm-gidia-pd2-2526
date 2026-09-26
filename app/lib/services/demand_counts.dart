@@ -4,10 +4,8 @@ import 'dart:ui';
 
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
+import '../services/backend_config.dart';
 
-import '../constants.dart';
-
-final String _baseUrl = BACKEND_URL;
 
 const heatmapLow  = Color(0x7700C8FF);
 const heatmapMid  = Color(0xAA00E676);
@@ -37,7 +35,8 @@ class DemandCountsService {
   }
 
   Future<String> _fetchFromBackend(bool isFhvhv) async {
-    final uri = Uri.parse('$_baseUrl/api/predictions/demand?is_fhvhv=$isFhvhv');
+    final uri = Uri.parse(
+      '${BackendConfig.baseUrl}/api/predictions/demand?is_fhvhv=$isFhvhv');
 
     final response = await http.get(uri);
 

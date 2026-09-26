@@ -2,10 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
-import '../constants.dart';
+import '../services/backend_config.dart';
 
-// FastAPI server
-final String _baseUrl = BACKEND_URL;
 
 class TrafficCamera {
   final String id;
@@ -59,7 +57,8 @@ class CamerasService {
   }
 
   Future<String> _fetchFromBackend() async {
-    final uri = Uri.parse('$_baseUrl/api/data/nyc_traffic_cameras');
+    final uri = Uri.parse(
+      '${BackendConfig.baseUrl}/api/data/nyc_traffic_cameras');
 
     final response = await http.get(uri);
 

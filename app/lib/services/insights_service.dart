@@ -2,7 +2,8 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
-import '../constants.dart';
+import '../services/backend_config.dart';
+
 
 class ZoneStat {
   final int locationId;
@@ -106,7 +107,7 @@ class InsightsService {
 
     try {
       final response = await http.get(
-        Uri.parse('$BACKEND_URL/api/insights/overview?is_fhvhv=$isFhvhv'),
+        Uri.parse('${BackendConfig.baseUrl}/api/insights/overview?is_fhvhv=$isFhvhv'),
       );
 
       if (response.statusCode != 200) {
@@ -154,7 +155,7 @@ class InsightsService {
 
     try {
       final response = await http.get(
-        Uri.parse('$BACKEND_URL/api/predictions/demand?is_fhvhv=$isFhvhv'),
+        Uri.parse('${BackendConfig.baseUrl}/api/predictions/demand?is_fhvhv=$isFhvhv'),
       );
 
       if (response.statusCode != 200) {
