@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import '../services/backend_config.dart';
 
-import '../constants.dart';
 
 class ChatMessage {
   final String role; // 'user' | 'assistant'
@@ -26,7 +26,7 @@ class RollyService {
   // has context, then appends both turns to [history].
   Future<String> chat(String message) async {
     final res = await http.post(
-      Uri.parse('$BACKEND_URL/api/rolly/chat'),
+      Uri.parse('${BackendConfig.baseUrl}/api/rolly/chat'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'message': message,

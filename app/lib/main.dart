@@ -5,6 +5,7 @@ import 'screens/cameras.dart';
 import 'screens/insights.dart';
 import 'screens/tips.dart';
 import 'screens/rolly.dart';
+import 'screens/settings.dart';
 import 'services/backend_cameras.dart';
 
 void main() {
@@ -52,6 +53,7 @@ class _MainNavigationState extends State<MainNavigation> {
             initialCamera: _selectedCamera,
           ),
           const Rolly(),
+          const Settings(),
         ],
       ),
       bottomNavigationBar: _PillNavBar(
@@ -77,6 +79,7 @@ const _icons = <(IconData, IconData)>[
   (Icons.map_outlined,              Icons.map_rounded),
   (Icons.videocam_outlined,         Icons.videocam_rounded),
   (Icons.pets_rounded,              Icons.pets_rounded),
+  (Icons.settings_outlined,         Icons.settings_rounded),
 ];
 
 class _PillNavBar extends StatelessWidget {
@@ -89,7 +92,7 @@ class _PillNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
     const height  = 52.0;
-    const margin  = 32.0;  // horizontal margin each side
+    const margin  = 16.0;  // horizontal margin each side
     const vMargin = 0.0;  // above safe area
 
     return Padding(

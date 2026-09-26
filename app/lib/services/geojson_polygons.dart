@@ -5,10 +5,8 @@ import 'package:geojson_vi/geojson_vi.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:http/http.dart' as http;
-import '../constants.dart';
+import '../services/backend_config.dart';
 
-// FastAPI server
-final String _baseUrl = BACKEND_URL;
 
 class GeoJsonPolygonsService {
   static final GeoJsonPolygonsService _instance =
@@ -32,7 +30,8 @@ class GeoJsonPolygonsService {
   }
 
   Future<String> _fetchFromBackend() async {
-    final uri = Uri.parse('$_baseUrl/api/data/taxi_zone_lookup');
+    final uri = Uri.parse(
+      '${BackendConfig.baseUrl}/api/data/taxi_zone_lookup');
 
     final response = await http.get(uri);
 
