@@ -89,11 +89,9 @@ class _MapOverviewMainScreenState extends State<MapOverviewMainScreen> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Container(
-          color: const Color(0xFF151515),
-        ),
         FlutterMap(
           options: MapOptions(
+            backgroundColor: const Color(0xFF151515),
             initialCenter: LatLng(40.712, -74.005),
             initialZoom: _currentZoom,
 
