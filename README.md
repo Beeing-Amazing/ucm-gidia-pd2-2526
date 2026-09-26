@@ -43,19 +43,7 @@ Here are some demos showing our app running:
 ```
 
 ## Setup
-
-Uses Python >= 3.13. \
 Needs [docker](https://www.docker.com/) to run the backend service. \
-We recommend using [uv](https://github.com/astral-sh/uv) for dependecy management.
-
-```bash
-# core dependencies
-uv sync
-
-# for re-running some scripts and data download
-uv sync --all-extras
-```
-Needs [Flutter](https://docs.flutter.dev/install) to run the app
 
 ### Usage
 > [!WARNING]
@@ -80,6 +68,19 @@ docker compose up
 ```
 
 ### Developing
+#### backend 
+Uses Python >= 3.13. \
+We recommend using [uv](https://github.com/astral-sh/uv) for dependecy management.
+```bash
+# core dependencies
+uv sync
+
+# for re-running some scripts and data download
+uv sync --all-extras
+```
+
+#### frontend
+Uses [Flutter](https://docs.flutter.dev/install)
 
 In order to install dependencies for the app with flutter
 ```bash
@@ -91,7 +92,6 @@ flutter run
 ```
 
 ### Running on iOS
-
 > [!NOTE]
 > iOS development requires a Mac with Xcode installed.
 
@@ -116,7 +116,6 @@ flutter run
    ```
 
 #### Physical iOS Device
-
 1. Connect your iPhone via USB and **trust** the Mac when prompted on the device.
 2. On iOS 16+, enable **Developer Mode** on the device:
    `Settings -> Privacy & Security -> Developer Mode -> On`
@@ -132,7 +131,6 @@ flutter run
    ```
 
 ## Pipelines
-
 ### Acquiring data
 Certain Python scripts and example notebooks require specific datasets to run. 
 Due to the large size of this data, it cannot be shared directly.
@@ -159,3 +157,13 @@ uv run -m src.aggregate_demand
 
 ## License
 See [LICENSE](LICENSE).
+
+## Credits
+This project was developed as a University project by
+- <https://github.com/AliciaPereda>
+- <https://github.com/Beeing-Amazing>
+- <https://github.com/Ch3ngJ>
+- <https://github.com/tudouerr>
+- <https://github.com/Yao-UCM>
+
+Non-trivial code for the app frontend was written with the use of AI tools.
