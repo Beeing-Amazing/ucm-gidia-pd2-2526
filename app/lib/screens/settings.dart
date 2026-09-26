@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 import '../app_theme.dart';
 import '../services/backend_config.dart';
@@ -39,17 +36,7 @@ class _SettingsState extends State<Settings> {
 
       BackendConfig.setBaseUrl(url);
 
-      final response = await http
-          .get(Uri.parse('${BackendConfig.baseUrl}/health'))
-          .timeout(const Duration(seconds: 5));
-
-      final data = jsonDecode(response.body);
-
-      final online =
-          response.statusCode == 200 &&
-          data is Map &&
-          data['ok'] == true;
-
+      final online = await BackendConfig.testServer();
       if (!mounted) return;
 
       setState(() {
