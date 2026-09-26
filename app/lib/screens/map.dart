@@ -9,6 +9,7 @@ import 'cameras.dart';
 import '../services/geojson_polygons.dart';
 import '../services/backend_cameras.dart';
 import '../services/demand_counts.dart';
+import '../services/backend_config.dart';
 
 
 class MapOverviewMainScreen extends StatefulWidget {
@@ -40,6 +41,14 @@ class _MapOverviewMainScreenState extends State<MapOverviewMainScreen> {
   void initState() {
     super.initState();
     _loadData();
+    _checkBackend();
+  }
+
+  bool _backendOnline = true;
+  Future<void> _checkBackend() async {
+    final online = await BackendConfig.testServer();
+    if (!mounted) return;
+    setState(() { _backendOnline = online; }); 
   }
 
   Future<void> _loadData() async {
@@ -82,6 +91,7 @@ class _MapOverviewMainScreenState extends State<MapOverviewMainScreen> {
       children: [
         FlutterMap(
           options: MapOptions(
+            backgroundColor: const Color(0xFF151515),
             initialCenter: LatLng(40.712, -74.005),
             initialZoom: _currentZoom,
 
@@ -115,10 +125,11 @@ class _MapOverviewMainScreenState extends State<MapOverviewMainScreen> {
           ),
 
           children: [
-            TileLayer(
-              urlTemplate: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
-              userAgentPackageName: 'com.museekarapp.app',
-            ),
+            if (_backendOnline)
+              TileLayer(
+                urlTemplate: '${BackendConfig.baseUrl}/map/{z}/{x}/{y}.png',
+                userAgentPackageName: 'com.museekarapp.app',
+              ),
 
             /// POLYGONS
             PolygonLayer(

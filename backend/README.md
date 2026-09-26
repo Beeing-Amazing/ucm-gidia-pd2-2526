@@ -8,3 +8,8 @@ using the provided compose file at the project root.
 > At this moment, these scripts do not safecheck whether download scripts have been run.
 > Please run those first as described in the setup process.
 
+the companion app will query the backend to produce a tilemap. please provide an API key in project root `.env` :
+```
+CARTO_API_KEY="numbers"
+```
+
